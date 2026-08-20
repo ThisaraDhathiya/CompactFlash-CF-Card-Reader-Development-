@@ -1,0 +1,160 @@
+module STATUS_REG_2 (
+    input wire clk,                // Clock 
+    input wire reset,              // Reset input
+    input wire [2:0] Address_bus_A,     // Input data from the microcontroller
+    inout wire [15:0] Data_bus_A,  // Bidirectional data bus
+    input wire REQ,                // Request signal 
+    input wire CE1_A,              // Chip Enable for even byte addresses
+    input wire CE2_A,              // Chip Enable for odd byte addresses	 
+    input wire OE_A,               // Output Enable (read strobe)
+    input wire WE_A,               // Write Enable (write strobe)
+    input wire CS0_A,              // Chip Select 0, used for register access in True IDE Mode
+    input wire CS1_A,              // Chip Select 1, used for register access in True IDE Mode
+    input wire IORD_A,             // I/O Read (read strobe)
+    input wire IOWR_A,             // I/O Read (read strobe)
+    input wire INTRQ_A,  
+    output reg CE1_B,           
+    output reg CE2_B,   
+    output reg OE_B,
+    output reg WE_B,
+    output reg CS0_B,
+    output reg CS1_B,
+    output reg IORD_B,
+    output reg IOWR_B,
+    output reg INTRQ_B,
+    output reg [2:0] Address_bus_B,    
+    inout wire [15:0] Data_bus_B,   // Bidirectional data bus
+    output reg ACK
+);
+
+    reg [31:0] counter;            // 32-bit counter for delay generation
+    reg [3:0] state;               // State machine register
+    reg direction;                 // Direction control for Data_bus_A and Data_bus_B
+    reg [15:0] data_out;           // Data to be driven to the bus
+
+    // State definitions
+    localparam IDLE    = 4'b0000, 
+               state1  = 4'b0001, 
+               state2  = 4'b0010, 
+               state3  = 4'b0011, 
+               state4  = 4'b0100, 
+               state5  = 4'b0101,
+               state6  = 4'b0110,
+               state7  = 4'b0111,
+               state8  = 4'b1000,
+               state9  = 4'b1001,
+               state10 = 4'b1010,
+               state11 = 4'b1011,
+               state12 = 4'b1100;
+
+    parameter DELAY_NS = 100;        // Delay in nanoseconds
+
+    // Bidirectional data bus control
+    assign Data_bus_A = (direction) ? data_out : 16'bz;
+    assign Data_bus_B = (direction) ? data_out : 16'bz;
+
+    // State machine process
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            state <= IDLE;
+            INTRQ_B <= 1;
+            CE1_B <= 1;
+            CE2_B <= 1;
+            OE_B <= 1;
+            WE_B <= 1;
+            CS0_B <= 1;
+            CS1_B <= 1;
+            IORD_B <= 1;
+            IOWR_B <= 1;
+            INTRQ_B <= 1;
+            ACK <= 1;
+            direction <= 0;
+            data_out <= 16'b0;
+        end else begin
+            case (state)
+                IDLE: begin
+                    if (counter < DELAY_NS) begin  // Delay at start
+                        counter <= counter + 1;
+                    end else begin
+                        state <= state1;
+                    end
+                end
+
+                state1: begin
+                    if (CS0_A) begin 
+                        state <= state1;
+                    end else begin
+                        state <= state2;
+                    end
+                end
+
+                state2: begin
+                    CS0_B <= 0;
+                    state <= state3;	
+                end
+
+                state3: begin
+                    ACK <= 0;
+                    state <= state4;
+                end
+
+                state4: begin
+                    ACK <= 1;
+                    state <= state5;
+                end
+
+                state5: begin
+                    if (IORD_A) begin 
+                        state <= state5;	
+                    end else begin 
+                        state <= state6;
+                    end 
+                end
+
+                state6: begin
+                    IORD_B <= 0;
+                    state <= state7;
+                end
+
+                state7: begin
+                    ACK <= 0;
+                    state <= state8;
+                end
+
+                state8: begin 
+                    if (Address_bus_A == 3'b111) begin
+                        state <= state9;
+                    end else begin 
+                        state <= state8;
+                    end		
+                end
+
+                state9: begin 
+                    Address_bus_B <= Address_bus_A;
+                    state <= state10;
+                end	
+
+                state10: begin 
+                    ACK <= 0;
+                    state <= state11;
+                end
+
+                state11: begin 
+                    ACK <= 1;
+                    state <= state12;
+                end
+
+                state12: begin
+                    direction <= 1;
+                    data_out <= Data_bus_A;
+                    state <= IDLE;
+                end
+
+                default: state <= IDLE;
+            endcase
+        end
+    end
+endmodule
+
+

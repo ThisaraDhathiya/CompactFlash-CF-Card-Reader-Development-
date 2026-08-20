@@ -1,0 +1,54 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/THISARA/Desktop/code/Full code/New folder
+vCF_CARD
+Z0 !s110 1722577435
+!i10b 1
+!s100 2Di:fhY;<G;D^cO_b?IJd2
+I_l:gX07B]Ymfoa^jTm`>N2
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dC:/Users/THISARA/Desktop/code/Full code/New folder (2)
+w1722576079
+8C:\Users\THISARA\Desktop\code\Full code\New folder (2)\CF_CARD.v
+FC:\Users\THISARA\Desktop\code\Full code\New folder (2)\CF_CARD.v
+L0 2
+Z3 OV;L;10.6d;65
+r1
+!s85 0
+31
+Z4 !s108 1722577435.000000
+!s107 C:\Users\THISARA\Desktop\code\Full code\New folder (2)\CF_CARD.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\THISARA\Desktop\code\Full code\New folder (2)\CF_CARD.v|
+!i113 1
+Z5 o-work work
+Z6 tCvgOpt 0
+n@c@f_@c@a@r@d
+vtb_CF_CARD
+R0
+!i10b 1
+!s100 MPzBgfO:b1I4eP<DiNP:<0
+IabAiaBl60ioBAIl9;6GL92
+R1
+R2
+w1722576205
+8C:\Users\THISARA\Desktop\code\Full code\New folder (2)\tb_CF_CARD.v
+FC:\Users\THISARA\Desktop\code\Full code\New folder (2)\tb_CF_CARD.v
+L0 3
+R3
+r1
+!s85 0
+31
+R4
+!s107 C:\Users\THISARA\Desktop\code\Full code\New folder (2)\tb_CF_CARD.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\THISARA\Desktop\code\Full code\New folder (2)\tb_CF_CARD.v|
+!i113 1
+R5
+R6
+ntb_@c@f_@c@a@r@d

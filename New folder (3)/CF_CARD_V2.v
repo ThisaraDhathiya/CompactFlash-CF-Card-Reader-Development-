@@ -1,0 +1,434 @@
+`timescale 1ps / 1ps
+module CF_CARD_V2 (
+    input wire clk,                // Clock input
+    input wire reset,              // Asynchronous reset input
+    input wire [2:0] Address_Bus_A, // Address bus from the microcontroller
+    input wire [15:0] Data_Bus_A_In, // Data bus input from the microcontroller
+    output reg [15:0] Data_Bus_A_Out, // Data bus output to the microcontroller
+    input wire Set_Reg,
+	input wire RDY,					// Ready signal from microcontroller
+	input wire Data_RDY,			// Ready signal from microcontroller
+    input wire Address_Ok,
+    input wire CE1_A,              // Chip Enable 1 for the microcontroller
+    input wire CE2_A,              // Chip Enable 2 for the microcontroller
+    input wire OE_A,               // Output Enable for the microcontroller (read strobe)
+    input wire WE_A,               // Write Enable for the microcontroller (write strobe)
+    input wire CS0_A,              // Chip Select 0 for the microcontroller
+    input wire CS1_A,              // Chip Select 1 for the microcontroller
+    input wire IORD_A,             // I/O Read strobe from the microcontroller
+    input wire IOWR_A,             // I/O Write strobe from the microcontroller
+    input wire INTRQ_A,            // Interrupt Request from the microcontroller
+	input wire ACK ,                // Acknowledge signal to the microcontroller
+	output reg Req,                // Request signal to the microcontroller
+    output reg CE1_B,              // Chip Enable 1 for the CF card
+    output reg CE2_B,              // Chip Enable 2 for the CF card
+    output reg OE_B,               // Output Enable for the CF card (read strobe)
+    output reg WE_B,               // Write Enable for the CF card (write strobe)
+    output reg CS0_B,              // Chip Select 0 for the CF card
+    output reg CS1_B,              // Chip Select 1 for the CF card
+    output reg IORD_B,             // I/O Read strobe for the CF card
+    output reg IOWR_B,             // I/O Write strobe for the CF card
+    output reg INTRQ_B,            // Interrupt Request for the CF card
+    output reg [2:0] Address_Bus_B, // Address bus to the CF card
+    input wire [15:0] Data_Bus_B_In, // Data bus input from the CF card
+    output reg [15:0] Data_Bus_B_Out // Data bus output to the CF cardC:/Users/THISARA/Desktop/code/Full code/New folder (3)/CF_CARD_V2.v
+    
+);
+
+    reg [6:0] counter;            // 32-bit counter for delay generation
+    reg [5:0] state;               // State machine register
+    integer i;                     // Loop variable declaration
+
+    // State definitions
+    localparam IDLE    = 6'b000000,
+           state1  = 6'b000001,
+           state2  = 6'b000010,
+           state3  = 6'b000011,
+           state4  = 6'b000100,
+           state5  = 6'b000101,
+           state6  = 6'b000110,
+           state7  = 6'b000111,
+           state8  = 6'b001000,
+           state9  = 6'b001001,
+           state10 = 6'b001010,
+           state11 = 6'b001011,
+           state12 = 6'b001100,
+           state13 = 6'b001101,
+           state14 = 6'b001110,
+           state15 = 6'b001111,
+           state16 = 6'b010000,
+           state17 = 6'b010001,
+           state18 = 6'b010010,
+           state19 = 6'b010011,
+           state20 = 6'b010100,
+           state21 = 6'b010101,
+           state22 = 6'b010110,
+           state23 = 6'b010111,
+           state24 = 6'b011000,
+           state25 = 6'b011001,
+           state26 = 6'b011010,
+           state27 = 6'b011011,
+           state28 = 6'b011100,
+           state29 = 6'b011101,
+           state30 = 6'b011110,
+           state31 = 6'b011111,
+           state32 = 6'b100000,
+           state33 = 6'b100001,
+           state34 = 6'b100010,
+           state35 = 6'b100011,
+           state36 = 6'b100100,
+           state37 = 6'b100101,
+           state38 = 6'b100110,
+           state39 = 6'b100111,
+           state40 = 6'b101000;
+
+              
+
+    parameter DELAY_NS = 100;        // Delay in nanoseconds
+    parameter t = 10;          //delay
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            counter <= 0;
+            state <= IDLE;
+			 // Initialize control signals
+            CE1_B <= 1;
+            CE2_B <= 1;
+            OE_B <= 1;
+            WE_B <= 1;
+            CS0_B <= 1;
+            CS1_B <= 1;
+            IORD_B <= 1;
+            IOWR_B <= 1;
+            INTRQ_B <= 1;
+            Req <= 1;
+			//Address_Bus_B <=3'b000;
+			//Data_Bus_A_Out <= 16'h0000;
+			//Data_Bus_B_Out <= 16'h0000;
+			
+        end else begin
+            case (state)
+                IDLE: begin
+                    if (counter < DELAY_NS) begin 	 // Delay at start
+                        counter <= counter + 1;
+                    end else begin
+						counter <=0;
+                        state <= state1;
+						
+                    end
+                end
+				
+				state1: begin		
+				//wait until reciving chip select signal from mc
+                    if (CS0_A) begin 
+                        state <= state1;
+                    end 
+					else begin
+                        state <= state2;
+                    end
+                end
+				
+				state2: begin		
+				// send chip select signal to CF card
+                    CS0_B <= 0;
+                    state <= state3;    
+                end
+				
+				state3: begin		
+				//send request to mc
+                    Req <= 0;
+                    state <= state4;
+                end
+				
+				state4: begin		
+				// wait until reciving read signal from mc
+                    if (IORD_A) begin 
+                        state <= state4;    
+                    end 
+					else begin 	
+                        state <= state5;
+                    end 
+                end
+				
+				state5: begin		
+				//remove request 
+                    Req <= 1;
+                    state <= state6;
+                end
+				
+				state6: begin		
+				//send read enable signal to cf card 
+                    IORD_B <= 0;
+                    state <= state7;
+                end
+				
+				state7: begin
+                    state <= state8;
+                end
+				
+				state8: begin		
+				//send request to mc
+                    Req <= 0;
+                    state <= state9;
+                end 
+				
+				state9: begin		 
+				//wait until reciving Address ok signal from mc ,
+				//mc send address ok signal after set address  
+                    if (Address_Ok) begin 
+                        state <= state9;    
+                    end 
+					else begin 
+                        state <= state10;
+                    end 
+                end
+				
+				state10: begin		
+				//remove request		
+                    Req <= 1;
+                    Address_Bus_B <= Address_Bus_A;
+					state <= state11;
+                end
+				
+				state11: begin		
+                    state <= state12;
+                end 
+				
+				state12: begin		
+				//send data to mc  from Data_Bus_A_Out 
+				//Data recived by cf card from Data_Bus_B_In c
+                    Data_Bus_A_Out <= Data_Bus_B_In;
+                    state <= state13;
+                end
+				
+				state13: begin		
+				//send request to mc
+                    Req <= 0;
+					state <= state14;
+                end
+				
+				state14: begin
+                    if (ACK) begin 		
+					//wait until recive Ack signal from mc
+					//mc send ack after read databus and after check redy or not 
+                        state <= state14;    
+                    end 
+					else begin 
+                        state <= state15;
+                    end 
+                end
+				
+				state15: begin		
+				//remove request
+                    Req <= 1;
+					state <= state16;
+                end
+				
+				state16: begin		
+				//if data bus is busy ,repeat step12-17
+				//if rdy then go to next state
+                    if (RDY) begin 
+                        state <= state12;    
+                    end 
+					else begin 
+                        state <= state17;
+                    end 
+                end
+				
+				state17: begin		
+				//send request to mc
+                    Req <= 0;
+					state <= state18;
+                end
+				
+				state18: begin		
+				
+				// wait untill reciving set_reg signal
+                    if (Set_Reg) begin 
+                        state <= state18;    
+                    end 
+					else begin 
+                        state <= state19;
+                    end 
+                end
+				
+				state19: begin		
+				//wait until reciving Address ok signal from mc ,
+				//mc send address ok signal after set address 
+                    if (Address_Ok) begin 		
+                        state <= state19;    
+                    end 
+					else begin 
+                        state <= state20;
+                    end 
+                end
+				
+				state20: begin		
+				//remove request
+                    Req <= 1;
+					state <= state21;
+                end
+				
+				state21: begin				
+													
+				//time delay
+					 if (counter < DELAY_NS) begin
+						counter <= counter + 1;
+					end else begin
+						counter <= 0;
+						state <= state22;
+					end
+				end
+				
+				state22: begin				
+				//send request to mc		
+                    Req <= 0;
+					state <= state23;
+                end
+
+
+                state23: begin			
+				//wait until reciving Data_RDY signal
+				//mc send data_rdy signal after send data to databus 
+                    if (Data_RDY) begin 
+                        state <= state23;    
+                    end 
+					else begin 		
+                        state <= state24;
+                    end 
+                end
+				
+				state24: begin		
+				//remove request
+                    Req <= 1;
+					state <= state25;
+                end
+				
+				state25: begin		
+				//send data to data bus which are recived from mc
+                    Data_Bus_B_Out <= Data_Bus_A_In;
+					state <= state26;
+                end
+				
+				state26: begin		
+				//send request
+                    Req <= 0;
+					state <= state27;
+                end
+				
+				state27: begin		
+				//wait until reseving write signal from mc
+                    if (IOWR_A) begin 
+                        state <= state27;    
+                    end 
+					else begin 
+                        state <= state28;
+                    end 
+                end
+				
+				state28: begin		
+				//remove req and send read signal to cf_card
+                    Req <= 1;
+					IOWR_B <=0;
+					state <= state29;
+                end
+				
+				state29: begin
+                    if (counter < DELAY_NS) begin  // Delay 
+                        counter <= counter + 1;
+                    end else begin
+						counter <= 0;
+                        state <= state30;
+                    end
+                end
+				
+				state30: begin		
+				//send req
+                    Req <= 0;
+					state <= state31;
+                end
+				
+				state31: begin		
+				//wait until reseving write signal from mc		
+                    if (IOWR_A) begin 
+                        state <= state32;    
+                    end 
+					else begin 
+                        state <= state31;
+                    end 
+                end
+				
+				state32: begin
+                    Req <= 1;
+					IOWR_B <=1;
+					state <= state33;
+                end
+				
+				
+				state33: begin
+                    if (counter < DELAY_NS) begin  // Delay 
+                        counter <= counter + 1;
+                    end else begin
+						 counter <= 0;
+                        state <= state34;
+                    end
+                end
+				
+				
+				state34: begin		
+				//send req to mc 
+                    Req <= 0;
+					state <= state35;
+                end
+				
+				state35: begin		
+				// wait until reciving ACK signal from MC 
+				// MC send ack signal after assign Set_Reg = 1 or 0 ;
+                    if (ACK) begin 
+                        state <= state35;    
+                    end 
+					else begin 
+                        state <= state36;
+                    end 
+                end
+				
+				
+				
+				state36: begin		
+				// if mc need to set a register again  send Set_Reg=0				
+				
+                    if (Set_Reg) begin 
+                        state <= state37;    
+                    end 
+					else begin 
+                        state <= state19;
+                    end 
+                end
+				
+				state37: begin 
+                    // Address Bus set to 0x1F0 (Data Register)
+                    Address_Bus_B = 16'h1F0;
+                    for (i = 0; i < 256; i = i + 1) begin
+                        // Assert IORD# to read the data
+                        IORD_B = 0;
+                        //if need add Small delay
+                        Data_Bus_A_Out = Data_Bus_B_In;
+                        IORD_B = 1;
+                        //if need add Small delay   
+
+						
+                    end
+					state <= state7;
+                end
+		
+				
+				
+				
+                default: state <= IDLE;
+            endcase
+        end
+    end
+	
+endmodule
+
+

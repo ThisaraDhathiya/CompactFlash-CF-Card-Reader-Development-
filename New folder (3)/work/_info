@@ -1,0 +1,98 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/THISARA/Desktop/code/Full code/New folder (2)
+vCF_CARD
+!s110 1722580188
+!i10b 1
+!s100 2Di:fhY;<G;D^cO_b?IJd2
+I6J`IiMU?Ug8NU39YamS^60
+Z0 VDg1SIo80bB@j0V0VzS_@n1
+Z1 dC:/Users/THISARA/Desktop/code/Full code/New folder (3)
+w1722579695
+Z2 8C:\Users\THISARA\Desktop\code\Full code\New folder (3)\CF_CARD_V2.v
+Z3 FC:\Users\THISARA\Desktop\code\Full code\New folder (3)\CF_CARD_V2.v
+L0 2
+Z4 OV;L;10.6d;65
+r1
+!s85 0
+31
+!s108 1722580188.000000
+Z5 !s107 C:\Users\THISARA\Desktop\code\Full code\New folder (3)\CF_CARD_V2.v|
+Z6 !s90 -reportprogress|300|-work|work|-stats=none|C:\Users\THISARA\Desktop\code\Full code\New folder (3)\CF_CARD_V2.v|
+!i113 1
+Z7 o-work work
+Z8 tCvgOpt 0
+n@c@f_@c@a@r@d
+vCF_CARD_V2
+Z9 !s110 1722597199
+!i10b 1
+!s100 bj=CBoWZ<l577E_oOzn4E3
+IBlI=6AKgSPTNGTS]TnJC^2
+R0
+R1
+w1722593367
+R2
+R3
+L0 2
+R4
+r1
+!s85 0
+31
+Z10 !s108 1722597199.000000
+R5
+R6
+!i113 1
+R7
+R8
+n@c@f_@c@a@r@d_@v2
+vtb_CF_CARD
+!s110 1722579717
+!i10b 1
+!s100 KXNo@;8i]XFBZ:Iinh`Nb1
+ImCU=SKTY3KSCbRQzB=6=:2
+R0
+R1
+w1722578256
+8C:/Users/THISARA/Desktop/code/Full code/New folder (3)/tb_CF_CARD_V2.v
+FC:/Users/THISARA/Desktop/code/Full code/New folder (3)/tb_CF_CARD_V2.v
+L0 3
+R4
+r1
+!s85 0
+31
+!s108 1722579717.000000
+!s107 C:/Users/THISARA/Desktop/code/Full code/New folder (3)/tb_CF_CARD_V2.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/THISARA/Desktop/code/Full code/New folder (3)/tb_CF_CARD_V2.v|
+!i113 1
+R7
+R8
+ntb_@c@f_@c@a@r@d
+vtb_CF_CARD_V2
+R9
+!i10b 1
+!s100 CUalmIETif_?BB;E_BkM^1
+IROZ6S9gQS9c^:>EL5zilQ0
+R0
+R1
+w1722597191
+8C:\Users\THISARA\Desktop\code\Full code\New folder (3)\tb_CF_CARD_V2.v
+FC:\Users\THISARA\Desktop\code\Full code\New folder (3)\tb_CF_CARD_V2.v
+L0 3
+R4
+r1
+!s85 0
+31
+R10
+!s107 C:\Users\THISARA\Desktop\code\Full code\New folder (3)\tb_CF_CARD_V2.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\THISARA\Desktop\code\Full code\New folder (3)\tb_CF_CARD_V2.v|
+!i113 1
+R7
+R8
+ntb_@c@f_@c@a@r@d_@v2

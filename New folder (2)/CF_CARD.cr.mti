@@ -1,0 +1,15 @@
+{C:/Users/THISARA/Desktop/code/Full code/New folder (2)/CF_CARD.v} {1 {vlog -work work -stats=none {C:\Users\THISARA\Desktop\code\Full code\New folder (2)\CF_CARD.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+-- Compiling module CF_CARD
+
+Top level modules:
+	CF_CARD
+
+} {} {}} {C:/Users/THISARA/Desktop/code/Full code/New folder (2)/tb_CF_CARD.v} {1 {vlog -work work -stats=none {C:\Users\THISARA\Desktop\code\Full code\New folder (2)\tb_CF_CARD.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+-- Compiling module tb_CF_CARD
+
+Top level modules:
+	tb_CF_CARD
+
+} {} {}}
